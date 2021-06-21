@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 **/src/resources/
+.mvn/
+mvnw.cmd
+mvnw
+
 
 ### STS ###
 .apt_generated
