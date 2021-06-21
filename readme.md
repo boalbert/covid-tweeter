@@ -1,6 +1,6 @@
 # covid-tweeter
 
-Tweets out available covid19-vaccine time slots in Gothenburg https://www.vgregion.se/ov/vaccinationstider/bokningsbara-tider/
+Tweets out available covid19-vaccine time slots in Gothenburg fetched from: https://www.vgregion.se/ov/vaccinationstider/bokningsbara-tider/
 
 
 
