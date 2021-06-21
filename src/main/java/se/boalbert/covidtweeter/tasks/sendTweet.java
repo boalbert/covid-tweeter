@@ -21,7 +21,7 @@ public class sendTweet {
 		this.availableTimeSlotScraper = availableTimeSlotScraper;
 	}
 
-	@Scheduled(fixedRate = 300000, initialDelay = 5000) // 15 min
+	@Scheduled(fixedRate = 900000, initialDelay = 5000) // 15 min
 	private void tweet() {
 
 		System.out.println(">>> Starting tweet()...");
