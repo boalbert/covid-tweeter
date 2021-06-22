@@ -53,9 +53,10 @@ class AvailableTimeSlotScraperTest {
 
 		AvailableTimeSlotScraper availableTimeSlotScraper = new AvailableTimeSlotScraper();
 
-		String extractedAge = availableTimeSlotScraper.extractAgeGroup("Här finns mottagningar som har lediga tider för webbokning just nu. Sedan 8:e juni kan du som är född 1976 eller tidigare samt du i riskgrupp över 18 år boka tid.");
+		String extractedAge = availableTimeSlotScraper.extractAgeGroup("Här finns mottagningar som har lediga tider för webbokning just nu. Från den  22 juni kan du som är född 1981 eller tidigare samt du i riskgrupp över 18 år boka tid.");
 
-		assertEquals("Född 1976 eller tidigare.", extractedAge);
+		assertEquals("Född 1981 eller tidigare.", extractedAge);
+		System.out.println(">>> " + extractedAge);
 
 	}
 }

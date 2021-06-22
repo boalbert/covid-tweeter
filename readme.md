@@ -19,7 +19,7 @@ Uppdaterad: 2021-06-21 09:09
 
 ## Setup
 
-Configure your twitter4j properties. Either in `src/resources/twitter4j.properies` or via environment variables.
+Configure your twitter4j properties. Either in `src/resources/twitter4j.properies` or via environment variables. See resources for more details.
 
 ```
 debug=true

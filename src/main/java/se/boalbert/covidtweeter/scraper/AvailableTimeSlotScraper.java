@@ -16,9 +16,8 @@ import java.util.List;
 public class AvailableTimeSlotScraper {
 
 	private static final Logger log = org.slf4j.LoggerFactory.getLogger(AvailableTimeSlotScraper.class);
-
-	public List<TimeSlot> allSlots = new ArrayList<>();
 	public static String lastUpdated = "";
+	public List<TimeSlot> allSlots = new ArrayList<>();
 
 	public List<TimeSlot> scrapeData() {
 
@@ -32,12 +31,12 @@ public class AvailableTimeSlotScraper {
 			Elements timeslots = doc.getElementsByClass("media-body");
 
 			// "Här finns mottagningar som har lediga tider för webbokning just nu. Sedan 8:e juni kan du som är född 1976 eller tidigare samt du i riskgrupp över 18 år boka tid."
-			String ageGroup = doc.getElementsContainingOwnText("född 1976").text();
+			String ageGroup = doc.getElementsContainingOwnText("född").text();
 
 			// Senast uppdaterad: 2021-06-18 13:07
 			String updated = doc.getElementsByTag("hr").next().text();
 
-			log.info(">>> Updated: " + lastUpdated);
+			log.info(">>> Page updated: " + lastUpdated);
 
 			if (!lastUpdated.equals(updated)) {
 
@@ -68,7 +67,7 @@ public class AvailableTimeSlotScraper {
 					newSlot.setUpdated(removeUpdatedText(updated));
 					newSlot.setAgeGroup(extractAgeGroup(ageGroup));
 
-					if(heading.contains("Göteborg")) {
+					if (heading.contains("Göteborg")) {
 						allSlots.add(newSlot);
 					}
 				}
@@ -79,13 +78,10 @@ public class AvailableTimeSlotScraper {
 			} else {
 				log.info(">>> Scraper: no updates");
 			}
-
-
 		} catch (IOException ex) {
-			System.out.println(">>> Error parsing document when scraping...");
+			log.error(">>> Error parsing document when scraping...");
 			ex.printStackTrace();
 		}
-
 		return new ArrayList<>();
 	}
 
@@ -108,7 +104,6 @@ public class AvailableTimeSlotScraper {
 	public String extractAgeGroup(String ageGroup) {
 		String[] splitString = ageGroup.split("född");
 		String[] splitString2 = splitString[1].split("samt");
-
 
 		return "Född " + splitString2[0].trim() + ".";
 	}

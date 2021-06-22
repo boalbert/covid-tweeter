@@ -1,5 +1,6 @@
 package se.boalbert.covidtweeter.tasks;
 
+import org.slf4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,6 +14,8 @@ import java.util.List;
 @EnableScheduling
 public class sendTweet {
 
+	private static final Logger log = org.slf4j.LoggerFactory.getLogger(AvailableTimeSlotScraper.class);
+
 	private final TwitterService twitterService;
 	private final AvailableTimeSlotScraper availableTimeSlotScraper;
 
@@ -24,7 +27,7 @@ public class sendTweet {
 	@Scheduled(fixedRate = 900000, initialDelay = 5000) // 15 min
 	private void tweet() {
 
-		System.out.println(">>> Starting tweet()...");
+		log.info(">>> Running scheduled job: sendTweet -> tweet()");
 
 		List<TimeSlot> timeSlots = availableTimeSlotScraper.scrapeData();
 		List<String> tweets = twitterService.createTweets(timeSlots);

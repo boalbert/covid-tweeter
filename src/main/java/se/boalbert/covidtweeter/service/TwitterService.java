@@ -27,10 +27,12 @@ public class TwitterService {
 
 				status = twitter.updateStatus(tweet);
 				log.info("Sending tweet:\n{} - {}", status.getCreatedAt(), status.getText());
+
 				log.info("Waiting {} s...", (timeOut / 1000));
 				Thread.sleep(timeOut);
 			}
 		} catch (TwitterException | InterruptedException ex) {
+			log.error(">>> Error when sending tweets...");
 			ex.printStackTrace();
 		} finally {
 			tweets.clear();

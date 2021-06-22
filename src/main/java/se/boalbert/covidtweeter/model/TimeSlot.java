@@ -8,6 +8,18 @@ public class TimeSlot {
 	public String ageGroup;
 	public String updated;
 
+	public TimeSlot() {
+	}
+
+	public TimeSlot(String heading, String linkText, String linkHref, String openSlots, String ageGroup, String updated) {
+		this.heading = heading;
+		this.linkText = linkText;
+		this.linkHref = linkHref;
+		this.openSlots = openSlots;
+		this.ageGroup = ageGroup;
+		this.updated = updated;
+	}
+
 	@Override
 	public String toString() {
 		return "TimeSlot{" +
@@ -59,24 +71,12 @@ public class TimeSlot {
 		this.updated = updated;
 	}
 
-	public TimeSlot() {
-	}
-
 	public String getAgeGroup() {
 		return ageGroup;
 	}
 
 	public void setAgeGroup(String ageGroup) {
 		this.ageGroup = ageGroup;
-	}
-
-	public TimeSlot(String heading, String linkText, String linkHref, String openSlots, String ageGroup, String updated) {
-		this.heading = heading;
-		this.linkText = linkText;
-		this.linkHref = linkHref;
-		this.openSlots = openSlots;
-		this.ageGroup = ageGroup;
-		this.updated = updated;
 	}
 }
 
