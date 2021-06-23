@@ -7,7 +7,8 @@ target/
 .mvn/
 mvnw.cmd
 mvnw
-
+docker-compose.yml
+Dockerfile
 
 ### STS ###
 .apt_generated
