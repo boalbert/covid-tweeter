@@ -6,7 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
-import se.boalbert.covidtweeter.model.TimeSlot;
+import se.boalbert.covidtweeter.model.TestCenter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ public class AvailableTimeSlotScraper {
 
 	private static final Logger log = org.slf4j.LoggerFactory.getLogger(AvailableTimeSlotScraper.class);
 	public static String lastUpdated = "";
-	public List<TimeSlot> allSlots = new ArrayList<>();
+	public List<TestCenter> allSlots = new ArrayList<>();
 
-	public List<TimeSlot> scrapeData() {
+	public List<TestCenter> scrapeData() {
 
 		allSlots.clear();
 
@@ -36,7 +36,7 @@ public class AvailableTimeSlotScraper {
 			// Senast uppdaterad: 2021-06-18 13:07
 			String updated = doc.getElementsByTag("hr").next().text();
 
-			log.info(">>> Page updated: " + lastUpdated);
+			log.info(">>> Page updated: " + updated);
 
 			if (!lastUpdated.equals(updated)) {
 
@@ -44,14 +44,11 @@ public class AvailableTimeSlotScraper {
 
 				for (Element timeslot : timeslots) {
 
-					TimeSlot newSlot = new TimeSlot();
+					TestCenter newSlot = new TestCenter();
 
 					// Göteborg: Drive In Nötkärnan Slottskogen
 					String heading = timeslot.select("h3").text();
 					Element link = timeslot.select("a").first();
-
-					// Boka tid via webben hos Drive In Nötkärnan Slottskogen
-					String linkText = link.text();
 
 					// https://formular.1177.se/etjanst/ad7ed879-138d-4cfd-ac94-83c0af422e44?externalApplication=COVID_SE2321000131-E000000016315
 					String linkHref = link.attr("href");
@@ -60,16 +57,16 @@ public class AvailableTimeSlotScraper {
 					Element spanText = timeslot.select("span").first();
 					String openSlots = spanText.text();
 
-					newSlot.setHeading(heading);
-					newSlot.setLinkText(linkText);
-					newSlot.setLinkHref(linkHref);
-					newSlot.setOpenSlots(extractOpenTimeslots(openSlots));
+					newSlot.setTitle(extractTestCenterTitle(heading));
+					newSlot.setMunicipalityName(extractMunicipalityName(heading));
+
+					newSlot.setUrlBooking(linkHref);
+					newSlot.setTimeSlots(extractOpenTimeslots(openSlots));
 					newSlot.setUpdated(removeUpdatedText(updated));
 					newSlot.setAgeGroup(extractAgeGroup(ageGroup));
 
-					if (heading.contains("Göteborg")) {
-						allSlots.add(newSlot);
-					}
+					allSlots.add(newSlot);
+
 				}
 
 				log.info(">>> Scraped {} slots", allSlots.size());
@@ -102,9 +99,20 @@ public class AvailableTimeSlotScraper {
 	}
 
 	public String extractAgeGroup(String ageGroup) {
-		String[] splitString = ageGroup.split("född");
-		String[] splitString2 = splitString[1].split("samt");
+		String[] splitAtFodd = ageGroup.split("född");
+		String[] splitAtSamt = splitAtFodd[1].split("samt");
 
-		return "Född " + splitString2[0].trim() + ".";
+		return "Född " + splitAtSamt[0].trim() + ".";
 	}
+
+	public String extractTestCenterTitle(String heading) {
+		String[] splitHeading = heading.split(":");
+		return splitHeading[1].trim();
+	}
+
+	public String extractMunicipalityName(String heading) {
+		String[] splitHeading = heading.split(":");
+		return splitHeading[0].trim();
+	}
+
 }

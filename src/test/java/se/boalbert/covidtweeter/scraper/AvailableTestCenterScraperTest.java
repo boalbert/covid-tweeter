@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class AvailableTimeSlotScraperTest {
+class AvailableTestCenterScraperTest {
 
 	@Test
 	void TestExtractOpenTimeslots() {
@@ -57,6 +57,45 @@ class AvailableTimeSlotScraperTest {
 
 		assertEquals("Född 1981 eller tidigare.", extractedAge);
 		System.out.println(">>> " + extractedAge);
+
+	}
+
+	@Test
+	void extractTestCenter() {
+
+		AvailableTimeSlotScraper availableTimeSlotScraper = new AvailableTimeSlotScraper();
+
+		String testCenterText = "Mark: Kronans Apotek / MediCheck Covid-19 Skene";
+		String testCenterText2 = "Mariestad: Närhälsan Mariestad Sjukhus";
+		String testCenterText3 = "Munkedal: Närhälsan Dingle Lantbruksskolan";
+		String testCenterText4 = "Strömstad: Capio VC Strömstad";
+		String testCenterText5 = "Göteborg: Närhälsan Scandinavium";
+
+		assertEquals("Kronans Apotek / MediCheck Covid-19 Skene", availableTimeSlotScraper.extractTestCenterTitle(testCenterText));
+		assertEquals("Närhälsan Mariestad Sjukhus", availableTimeSlotScraper.extractTestCenterTitle(testCenterText2));
+		assertEquals("Närhälsan Dingle Lantbruksskolan", availableTimeSlotScraper.extractTestCenterTitle(testCenterText3));
+		assertEquals("Capio VC Strömstad", availableTimeSlotScraper.extractTestCenterTitle(testCenterText4));
+		assertEquals("Närhälsan Scandinavium", availableTimeSlotScraper.extractTestCenterTitle(testCenterText5));
+
+
+	}
+
+	@Test
+	void extractMunicipality() {
+
+		AvailableTimeSlotScraper availableTimeSlotScraper = new AvailableTimeSlotScraper();
+
+		String testCenterText = "Mark: Kronans Apotek / MediCheck Covid-19 Skene";
+		String testCenterText2 = "Mariestad: Närhälsan Mariestad Sjukhus";
+		String testCenterText3 = "Munkedal: Närhälsan Dingle Lantbruksskolan";
+		String testCenterText4 = "Strömstad: Capio VC Strömstad";
+		String testCenterText5 = "Göteborg: Närhälsan Scandinavium";
+
+		assertEquals("Mark", availableTimeSlotScraper.extractMunicipalityName(testCenterText));
+		assertEquals("Mariestad", availableTimeSlotScraper.extractMunicipalityName(testCenterText2));
+		assertEquals("Munkedal", availableTimeSlotScraper.extractMunicipalityName(testCenterText3));
+		assertEquals("Strömstad", availableTimeSlotScraper.extractMunicipalityName(testCenterText4));
+		assertEquals("Göteborg", availableTimeSlotScraper.extractMunicipalityName(testCenterText5));
 
 	}
 }

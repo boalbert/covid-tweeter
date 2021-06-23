@@ -2,7 +2,7 @@ package se.boalbert.covidtweeter.service;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
-import se.boalbert.covidtweeter.model.TimeSlot;
+import se.boalbert.covidtweeter.model.TestCenter;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -39,20 +39,20 @@ public class TwitterService {
 		}
 	}
 
-	public List<String> createTweets(List<TimeSlot> timeSlots) {
+	public List<String> createTweets(List<TestCenter> testCenters) {
 
 		List<String> tweets = new ArrayList<>();
 
-		for (TimeSlot slot : timeSlots) {
+		for (TestCenter slot : testCenters) {
 
 			String tweet = """
-					%s
+					%s: %s
 					Lediga tider: %s
 					Boka: %s
 											
 					Åldergrupp: %s
 					Uppdaterad: %s
-					""".formatted(slot.getHeading(), slot.getOpenSlots(), slot.getLinkHref(), slot.getAgeGroup(), slot.getUpdated());
+					""".formatted(slot.getMunicipalityName(), slot.getTitle(), slot.getTimeSlots(), slot.getUrlBooking(), slot.getAgeGroup(), slot.getUpdated());
 			tweets.add(tweet);
 		}
 
