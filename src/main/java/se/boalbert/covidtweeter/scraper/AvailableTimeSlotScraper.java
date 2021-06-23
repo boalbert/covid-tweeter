@@ -82,7 +82,7 @@ public class AvailableTimeSlotScraper {
 		return new ArrayList<>();
 	}
 
-	public String extractOpenTimeslots(String openSlotsText) {
+	public Long extractOpenTimeslots(String openSlotsText) {
 		// Split string to:
 		// - (Mer än 500
 		// - lediga tider kommande 2 veckor)"
@@ -90,7 +90,7 @@ public class AvailableTimeSlotScraper {
 		// Take first part of the String, "(Mer än 500"
 		// Replace everything that is not a number with "", i.e nothing
 		// Returns "500"
-		return splitAtWord[0].replaceAll("[^\\d]", "");
+		return Long.valueOf(splitAtWord[0].replaceAll("[^\\d]", ""));
 	}
 
 	public String removeUpdatedText(String updated) {

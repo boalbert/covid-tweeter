@@ -9,7 +9,7 @@ public class TestCenter {
 	public String urlContactCard; // "urlContactCard": "https://www.1177.se/Vastra-Gotaland/hitta-vard/kontaktkort/Narhalsan-Tjorn-vardcentral-Kallekarr/",
 	public String urlContactCardText; // "1"
 	public String testtype;
-	public String timeslots; // "5"
+	public Long timeslots; // "5"
 	public String ageGroup; // Född 1981 eller tidigare.
 	public String updated; // "2021-06-23 22:46:41"
 
@@ -29,11 +29,11 @@ public class TestCenter {
 		this.testtype = testtype;
 	}
 
-	public String getTimeslots() {
+	public Long getTimeslots() {
 		return timeslots;
 	}
 
-	public void setTimeslots(String timeslots) {
+	public void setTimeslots(Long timeslots) {
 		this.timeslots = timeslots;
 	}
 
@@ -115,11 +115,11 @@ public class TestCenter {
 		this.urlBooking = urlBooking;
 	}
 
-	public String getTimeSlots() {
+	public Long getTimeSlots() {
 		return timeslots;
 	}
 
-	public void setTimeSlots(String timeSlots) {
+	public void setTimeSlots(Long timeSlots) {
 		this.timeslots = timeSlots;
 	}
 

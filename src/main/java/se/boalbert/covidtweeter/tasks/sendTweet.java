@@ -34,12 +34,13 @@ public class sendTweet {
 
 		List<TestCenter> testCenters = availableTimeSlotScraper.scrapeData();
 		List<String> tweets = twitterService.createTweets(testCenters);
+		List<TestCenter> restCenters = restClient.extractAllCenters();
 
 		log.info("Heres the tweets!");
 		log.info(String.valueOf(tweets));
 
 		log.info("Heres the slots!");
-		log.info(String.valueOf(testCenters));
+		log.info(String.valueOf(restCenters));
 //		twitterService.sendTweet(tweets);
 	}
 
