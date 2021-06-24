@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import se.boalbert.covidtweeter.model.ListTestCenter;
 import se.boalbert.covidtweeter.model.TestCenter;
 
-import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,6 +26,13 @@ public class RestClient {
 	@Value("${CLIENT_SECRET}")
 	private String CLIENT_SECRET;
 
+	public Map<String, TestCenter> extractAllCenters() {
+		ListTestCenter listTestCenter = getFullResponseFromApi();
+
+		return listTestCenter.getTestcenters().stream()
+				.collect(Collectors.toMap(TestCenter :: getTitle, testCenter -> testCenter));
+
+	}
 
 	public ListTestCenter getFullResponseFromApi() {
 		WebClient webClient = WebClient.create();
@@ -54,17 +61,11 @@ public class RestClient {
 
 	}
 
-	public List<TestCenter> extractAllCenters() {
-		ListTestCenter listTestCenter = getFullResponseFromApi();
+	public Map<String, TestCenter> findOpenTimeSlots(Map<String, TestCenter> allTestCenters) {
 
-		return listTestCenter.getTestcenters();
-	}
-
-	public List<TestCenter> findOpenTimeSlots(List<TestCenter> allTestCenters) {
-
-		return allTestCenters.stream()
-				.filter(testCenter -> testCenter.getTimeslots() != null)
-				.filter(testCenter -> testCenter.getTimeslots() != 0)
-				.collect(Collectors.toList());
+		return allTestCenters.entrySet().stream()
+				.filter(map -> map.getValue().getTimeslots() != null)
+				.filter(map -> map.getValue().getTimeSlots() != 0)
+				.collect(Collectors.toMap(Map.Entry :: getKey, Map.Entry :: getValue));
 	}
 }

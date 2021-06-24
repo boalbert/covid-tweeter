@@ -6,7 +6,6 @@ import se.boalbert.covidtweeter.service.RestClient;
 import se.boalbert.covidtweeter.service.TwitterService;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,16 +22,16 @@ public class MergeData {
 		this.twitterService = twitterService;
 	}
 
-	public List<TestCenter> availableTestCenters(List<TestCenter> restCenters, List<TestCenter> scrapeCenters) {
+	public List<TestCenter> mergeMapsAndReturnUniqueTestCenters(Map<String, TestCenter> restCenters, Map<String, TestCenter> scrapeCenters) {
 
-		Map<String, TestCenter> restMap =
-				restCenters.stream().collect(Collectors.toMap(TestCenter :: getTitle, testCenter -> testCenter));
+//		Map<String, TestCenter> restMap =
+//				restCenters.stream().collect(Collectors.toMap(TestCenter :: getTitle, testCenter -> testCenter));
 
-		Map<String, TestCenter> scrapeMap =
-				scrapeCenters.stream().collect(Collectors.toMap(TestCenter :: getTitle, testCenter -> testCenter));
+//		Map<String, TestCenter> scrapeMap =
+//				scrapeCenters.stream().collect(Collectors.toMap(TestCenter :: getTitle, testCenter -> testCenter));
 
 
-		Map<String, TestCenter> merged = Stream.of(restMap, scrapeMap)
+		Map<String, TestCenter> merged = Stream.of(restCenters, scrapeCenters)
 				.flatMap(map -> map.entrySet().stream())
 				.collect(Collectors.toMap(
 						Map.Entry :: getKey,

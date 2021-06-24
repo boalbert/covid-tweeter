@@ -42,9 +42,9 @@ class AvailableTestCenterScraperTest {
 		String updatedText2 = "Senast uppdaterad: 2021-06-31 12:50";
 		String updatedText3 = "uppdaterad: 2021-06-18 00:00";
 
-		assertEquals("2021-07-01 13:07", availableTimeSlotScraper.removeUpdatedText(updatedText));
-		assertEquals("2021-06-31 12:50", availableTimeSlotScraper.removeUpdatedText(updatedText2));
-		assertEquals("2021-06-18 00:00", availableTimeSlotScraper.removeUpdatedText(updatedText3));
+		assertEquals("2021-07-01 13:07", availableTimeSlotScraper.extractOnlyDate(updatedText));
+		assertEquals("2021-06-31 12:50", availableTimeSlotScraper.extractOnlyDate(updatedText2));
+		assertEquals("2021-06-18 00:00", availableTimeSlotScraper.extractOnlyDate(updatedText3));
 
 	}
 

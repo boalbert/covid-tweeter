@@ -14,6 +14,10 @@ public class ListTestCenter {
 	public ListTestCenter() {
 	}
 
+	public String toString() {
+		return "ListTestCenter(testcenters=" + this.getTestcenters() + ", numberWeeks=" + this.getNumberWeeks() + ")";
+	}
+
 	public List<TestCenter> getTestcenters() {
 		return this.testCenters;
 	}
@@ -28,9 +32,5 @@ public class ListTestCenter {
 
 	public void setTestcenters(List<TestCenter> testcenters) {
 		this.testCenters = testcenters;
-	}
-
-	public String toString() {
-		return "ListTestCenter(testcenters=" + this.getTestcenters() + ", numberWeeks=" + this.getNumberWeeks() + ")";
 	}
 }

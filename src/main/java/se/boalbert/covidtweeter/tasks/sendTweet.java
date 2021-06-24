@@ -4,15 +4,16 @@ import org.slf4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import se.boalbert.covidtweeter.model.ListTestCenter;
 import se.boalbert.covidtweeter.model.TestCenter;
 import se.boalbert.covidtweeter.scraper.AvailableTimeSlotScraper;
 import se.boalbert.covidtweeter.service.RestClient;
 import se.boalbert.covidtweeter.service.TwitterService;
 import se.boalbert.covidtweeter.util.MergeData;
-import static se.boalbert.covidtweeter.scraper.AvailableTimeSlotScraper.ageGroup;
 
 import java.util.List;
+import java.util.Map;
+
+import static se.boalbert.covidtweeter.scraper.AvailableTimeSlotScraper.ageGroup;
 
 @Configuration
 @EnableScheduling
@@ -37,21 +38,12 @@ public class sendTweet {
 
 		log.info(">>> Running scheduled job: sendTweet -> tweet()");
 
-		List<TestCenter> scrapedCenters = availableTimeSlotScraper.scrapeData();
-		List<TestCenter> restCenters = restClient.findOpenTimeSlots(restClient.extractAllCenters());
-		List<String> tweets = twitterService.createTweets(mergeData.availableTestCenters(restCenters, scrapedCenters), ageGroup);
+		Map<String, TestCenter> scrapedCenters = availableTimeSlotScraper.scrapeData();
+		Map<String, TestCenter> restCenters = restClient.findOpenTimeSlots(restClient.extractAllCenters());
 
+		List<String> tweets = twitterService.createTweets(mergeData.mergeMapsAndReturnUniqueTestCenters(restCenters, scrapedCenters), ageGroup);
 
-
-		log.info("Heres the tweets!");
-		log.info(String.valueOf(tweets));
-//
-//		log.info("Heres the slots!");
-//		log.info(String.valueOf(restCenters));
-		//		twitterService.sendTweet(tweets);
-
-		log.info("Heres the map!: ");
+		twitterService.sendTweet(tweets);
 
 	}
-
 }

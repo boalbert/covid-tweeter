@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import se.boalbert.covidtweeter.model.TestCenter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class AvailableTimeSlotScraper {
@@ -18,61 +18,61 @@ public class AvailableTimeSlotScraper {
 	private static final Logger log = org.slf4j.LoggerFactory.getLogger(AvailableTimeSlotScraper.class);
 	public static String lastUpdated = "";
 	public static String ageGroup;
-	public List<TestCenter> allSlots = new ArrayList<>();
 
-	public List<TestCenter> scrapeData() {
+	public Map<String, TestCenter> scrapeData() {
 
-		allSlots.clear();
+		Map<String, TestCenter> allSlotsMap = new LinkedHashMap<>();
 
 		try {
 			// Whole HTML-document
-			Document doc = Jsoup.connect("https://www.vgregion.se/ov/vaccinationstider/bokningsbara-tider/").get();
+			Document htmlDocument = Jsoup.connect("https://www.vgregion.se/ov/vaccinationstider/bokningsbara-tider/").get();
 
-			// Timeslot list
-			Elements timeslots = doc.getElementsByClass("media-body");
+			// TestCenter divs
+			Elements testCenters = htmlDocument.getElementsByClass("media-body");
 
 			// "Här finns mottagningar som har lediga tider för webbokning just nu. Sedan 8:e juni kan du som är född 1976 eller tidigare samt du i riskgrupp över 18 år boka tid."
-			String agesText = doc.getElementsContainingOwnText("född").text();
+			String agesText = htmlDocument.getElementsContainingOwnText("född").text();
 
 			ageGroup = extractAgeGroup(agesText);
 			// Senast uppdaterad: 2021-06-18 13:07
-			String updated = doc.getElementsByTag("hr").next().text();
+			String updatedText = htmlDocument.getElementsByTag("hr").next().text();
 
-			log.info(">>> Page updated: " + updated);
+			log.info(">>> Page updated: " + updatedText);
 
-			if (!lastUpdated.equals(updated)) {
+			if (!lastUpdated.equals(updatedText)) {
+				lastUpdated = updatedText;
 
-				lastUpdated = updated;
-
-				for (Element timeslot : timeslots) {
-
-					TestCenter newSlot = new TestCenter();
-
+//				Loop over all testcenter-divs and insert data into testCenter-object
+				for (Element testCenter : testCenters) {
 					// Göteborg: Drive In Nötkärnan Slottskogen
-					String heading = timeslot.select("h3").text();
-					Element link = timeslot.select("a").first();
+					String heading = testCenter.select("h3").text();
 
 					// https://formular.1177.se/etjanst/ad7ed879-138d-4cfd-ac94-83c0af422e44?externalApplication=COVID_SE2321000131-E000000016315
-					String linkHref = link.attr("href");
+					String linkHref = testCenter.select("a").first().attr("href");
 
 					// (Mer än 500 lediga tider kommande 2 veckor)
-					Element spanText = timeslot.select("span").first();
-					String openSlots = spanText.text();
+					String openSlots = testCenter.select("span").first().text();
 
-					newSlot.setTitle(extractTestCenterTitle(heading));
-					newSlot.setMunicipalityName(extractMunicipalityName(heading));
+					// Chop up text and prepare it for creation of object
+					String title = extractTestCenterTitle(heading);
+					String municipalityName = extractMunicipalityName(heading);
+					Long timeSlots = extractOpenTimeslots(openSlots);
+					String updated = extractOnlyDate(updatedText);
 
+					// Populate object
+					TestCenter newSlot = new TestCenter();
+					newSlot.setTitle(title);
+					newSlot.setMunicipalityName(municipalityName);
 					newSlot.setUrlBooking(linkHref);
-					newSlot.setTimeSlots(extractOpenTimeslots(openSlots));
-					newSlot.setUpdated(removeUpdatedText(updated));
+					newSlot.setTimeSlots(timeSlots);
+					newSlot.setUpdated(updated);
 					newSlot.setAgeGroup(ageGroup);
 
-					allSlots.add(newSlot);
-
+					allSlotsMap.put(extractTestCenterTitle(heading), newSlot);
 				}
 
-				log.info(">>> Scraped {} slots", allSlots.size());
-				return allSlots;
+				log.info(">>> Scraped {} slots", allSlotsMap.size());
+				return allSlotsMap;
 
 			} else {
 				log.info(">>> Scraper: no updates");
@@ -81,23 +81,7 @@ public class AvailableTimeSlotScraper {
 			log.error(">>> Error parsing document when scraping...");
 			ex.printStackTrace();
 		}
-		return new ArrayList<>();
-	}
-
-	public Long extractOpenTimeslots(String openSlotsText) {
-		// Split string to:
-		// - (Mer än 500
-		// - lediga tider kommande 2 veckor)"
-		String[] splitAtWord = openSlotsText.split("lediga");
-		// Take first part of the String, "(Mer än 500"
-		// Replace everything that is not a number with "", i.e nothing
-		// Returns "500"
-		return Long.valueOf(splitAtWord[0].replaceAll("[^\\d]", ""));
-	}
-
-	public String removeUpdatedText(String updated) {
-		String[] splitAtColon = updated.split(":");
-		return splitAtColon[1].trim() + ":" + splitAtColon[2].trim();
+		return allSlotsMap;
 	}
 
 	public String extractAgeGroup(String ageGroup) {
@@ -115,6 +99,22 @@ public class AvailableTimeSlotScraper {
 	public String extractMunicipalityName(String heading) {
 		String[] splitHeading = heading.split(":");
 		return splitHeading[0].trim();
+	}
+
+	public Long extractOpenTimeslots(String openSlotsText) {
+		// Split string to:
+		// - (Mer än 500
+		// - lediga tider kommande 2 veckor)"
+		String[] splitAtWord = openSlotsText.split("lediga");
+		// Take first part of the String, "(Mer än 500"
+		// Replace everything that is not a number with "", i.e nothing
+		// Returns "500"
+		return Long.valueOf(splitAtWord[0].replaceAll("[^\\d]", ""));
+	}
+
+	public String extractOnlyDate(String updated) {
+		String[] splitAtColon = updated.split(":");
+		return splitAtColon[1].trim() + ":" + splitAtColon[2].trim();
 	}
 
 }

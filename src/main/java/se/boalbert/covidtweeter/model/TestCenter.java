@@ -27,6 +27,9 @@ public class TestCenter {
 		this.updated = updated;
 	}
 
+	public TestCenter() {
+	}
+
 	public String getUrlContactCardText() {
 		return urlContactCardText;
 	}
@@ -73,9 +76,6 @@ public class TestCenter {
 
 	public void setUrlContactCard(String urlContactCard) {
 		this.urlContactCard = urlContactCard;
-	}
-
-	public TestCenter() {
 	}
 
 	public String getMunicipalityName() {
