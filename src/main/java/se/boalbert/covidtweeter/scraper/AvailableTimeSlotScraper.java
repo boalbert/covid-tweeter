@@ -17,6 +17,7 @@ public class AvailableTimeSlotScraper {
 
 	private static final Logger log = org.slf4j.LoggerFactory.getLogger(AvailableTimeSlotScraper.class);
 	public static String lastUpdated = "";
+	public static String ageGroup;
 	public List<TestCenter> allSlots = new ArrayList<>();
 
 	public List<TestCenter> scrapeData() {
@@ -31,8 +32,9 @@ public class AvailableTimeSlotScraper {
 			Elements timeslots = doc.getElementsByClass("media-body");
 
 			// "Här finns mottagningar som har lediga tider för webbokning just nu. Sedan 8:e juni kan du som är född 1976 eller tidigare samt du i riskgrupp över 18 år boka tid."
-			String ageGroup = doc.getElementsContainingOwnText("född").text();
+			String agesText = doc.getElementsContainingOwnText("född").text();
 
+			ageGroup = extractAgeGroup(agesText);
 			// Senast uppdaterad: 2021-06-18 13:07
 			String updated = doc.getElementsByTag("hr").next().text();
 
@@ -63,7 +65,7 @@ public class AvailableTimeSlotScraper {
 					newSlot.setUrlBooking(linkHref);
 					newSlot.setTimeSlots(extractOpenTimeslots(openSlots));
 					newSlot.setUpdated(removeUpdatedText(updated));
-					newSlot.setAgeGroup(extractAgeGroup(ageGroup));
+					newSlot.setAgeGroup(ageGroup);
 
 					allSlots.add(newSlot);
 

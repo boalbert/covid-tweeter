@@ -39,7 +39,7 @@ public class TwitterService {
 		}
 	}
 
-	public List<String> createTweets(List<TestCenter> testCenters) {
+	public List<String> createTweets(List<TestCenter> testCenters, String ageGroup) {
 
 		List<String> tweets = new ArrayList<>();
 
@@ -52,7 +52,7 @@ public class TwitterService {
 											
 					Åldergrupp: %s
 					Uppdaterad: %s
-					""".formatted(slot.getMunicipalityName(), slot.getTitle(), slot.getTimeSlots(), slot.getUrlBooking(), slot.getAgeGroup(), slot.getUpdated());
+					""".formatted(slot.getMunicipalityName(), slot.getTitle(), slot.getTimeSlots(), slot.getUrlBooking(), ageGroup, slot.getUpdated());
 			tweets.add(tweet);
 		}
 

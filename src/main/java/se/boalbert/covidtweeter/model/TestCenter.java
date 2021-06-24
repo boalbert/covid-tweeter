@@ -13,6 +13,20 @@ public class TestCenter {
 	public String ageGroup; // Född 1981 eller tidigare.
 	public String updated; // "2021-06-23 22:46:41"
 
+	public TestCenter(String title, String hsaid, String municipalityName, String municipality, String urlBooking, String urlContactCard, String urlContactCardText, String testtype, Long timeslots, String ageGroup, String updated) {
+		this.title = title;
+		this.hsaid = hsaid;
+		this.municipalityName = municipalityName;
+		this.municipality = municipality;
+		this.urlBooking = urlBooking;
+		this.urlContactCard = urlContactCard;
+		this.urlContactCardText = urlContactCardText;
+		this.testtype = testtype;
+		this.timeslots = timeslots;
+		this.ageGroup = ageGroup;
+		this.updated = updated;
+	}
+
 	public String getUrlContactCardText() {
 		return urlContactCardText;
 	}
@@ -60,18 +74,6 @@ public class TestCenter {
 	public void setUrlContactCard(String urlContactCard) {
 		this.urlContactCard = urlContactCard;
 	}
-	/*
-	* String title;
-	String hsaid;
-	String municipalityName;
-	String municipality;
-	String urlBooking;
-	String urlContactCard;
-	String urlContactCardText;
-	String testtype;
-	Long timeslots;
-	String updated;
-	* */
 
 	public TestCenter() {
 	}
@@ -86,14 +88,16 @@ public class TestCenter {
 
 	@Override
 	public String toString() {
-		return "TimeSlot{" +
+		return "TestCenter{" +
 				"title='" + title + '\'' +
 				", hsaid='" + hsaid + '\'' +
 				", municipalityName='" + municipalityName + '\'' +
-				", municipalityId='" + municipality + '\'' +
-				", urlContactCard='" + urlContactCard + '\'' +
+				", municipality='" + municipality + '\'' +
 				", urlBooking='" + urlBooking + '\'' +
-				", timeSlots='" + timeslots + '\'' +
+				", urlContactCard='" + urlContactCard + '\'' +
+				", urlContactCardText='" + urlContactCardText + '\'' +
+				", testtype='" + testtype + '\'' +
+				", timeslots=" + timeslots +
 				", ageGroup='" + ageGroup + '\'' +
 				", updated='" + updated + '\'' +
 				'}';
